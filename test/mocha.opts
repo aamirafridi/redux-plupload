@@ -1,0 +1,6 @@
+--compilers js:babel-register
+--require env-test
+--reporter spec
+--recursive
+--colors
+--bail
