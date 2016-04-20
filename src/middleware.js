@@ -1,7 +1,7 @@
 import contentDisposition from 'content-disposition';
 
 import { ActionTypes } from './constants';
-import cloneMutable from './cloneMutable';
+import { makeSnapshotFunction } from './snapshot';
 
 const actionToMethod = {
   [ActionTypes.SET_OPTION]: ['setOption', ({ option, value }) => [option, value]],
@@ -70,7 +70,7 @@ function setupUpload(origUploader, file, upload) {
 
 function init(store, plupload, options) {
   const uploader = plupload.Uploader(options);  // eslint-disable-line new-cap
-  let uploaderState = {};
+  const snapshot = makeSnapshotFunction();
 
   uploader.bind('BeforeUpload', (eventUploader, file) => {
     if (!options.uploadDataSelector) return;
@@ -81,14 +81,11 @@ function init(store, plupload, options) {
 
   Object.keys(actionToEvent).forEach(type => {
     const [event, argsToAction] = actionToEvent[type];
-    uploader.bind(event, (nextUploaderState, ...args) => {
-      uploaderState = cloneMutable(nextUploaderState, uploaderState);
+    uploader.bind(event, (...origArgs) => {
+      const [uploaderState, ...args] = snapshot(origArgs);
       const action = argsToAction(...args);
-      if (!action.meta) {
-        action.meta = { uploader: uploaderState };
-      } else {
-        action.meta.uploader = uploaderState;
-      }
+      if (!action.meta) action.meta = {};
+      action.meta.uploader = uploaderState;
       action.type = type;
       store.dispatch(action);
     });
