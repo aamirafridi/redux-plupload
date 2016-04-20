@@ -69,7 +69,7 @@ function setupUpload(origUploader, file, upload) {
 }
 
 function init(store, plupload, options) {
-  const uploader = plupload.Uploader(options);  // eslint-disable-line new-cap
+  const uploader = new plupload.Uploader(options);
   const snapshot = makeSnapshotFunction();
 
   uploader.bind('BeforeUpload', (eventUploader, file) => {

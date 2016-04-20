@@ -36,7 +36,7 @@ describe('middleware', () => {
 
   beforeEach(() => {
     sinon = sinonLib.sandbox.create();
-    uploader = Uploader(); // eslint-disable-line new-cap
+    uploader = new Uploader();
   });
 
   afterEach(() => {
@@ -67,9 +67,9 @@ describe('middleware', () => {
   it('proxies actions to uploader methods', () => {
     sinon.stub(plupload, 'Uploader').returns(uploader);
     sinon.mock(uploader).expects('setOption').once().withExactArgs('option1', 'value1');
-    const mw = middleware(plupload)({})(() => {});
-    mw({ type: ActionTypes.INIT });
-    mw({ type: ActionTypes.SET_OPTION, payload: { option: 'option1', value: 'value1' } });
+    const dispatch = middleware(plupload)({})(() => {});
+    dispatch({ type: ActionTypes.INIT });
+    dispatch({ type: ActionTypes.SET_OPTION, payload: { option: 'option1', value: 'value1' } });
   });
 
   it('proxies uploader events to actions', () => {
@@ -83,8 +83,8 @@ describe('middleware', () => {
       meta: { uploader: { domain: null } },
     };
     storeMock.expects('dispatch').once().withExactArgs(action);
-    const mw = middleware(plupload)(store)(() => {});
-    mw({ type: ActionTypes.INIT });
+    const dispatch = middleware(plupload)(store)(() => {});
+    dispatch({ type: ActionTypes.INIT });
     uploader.emit('UploadFile', uploader, file);
   });
 });
