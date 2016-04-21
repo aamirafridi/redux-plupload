@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 
-import { ActionTypes } from '../src/constants';
+import { ActionTypes } from '../es6/constants';
 
 describe('constants', () => {
   describe('ActionTypes', () => {

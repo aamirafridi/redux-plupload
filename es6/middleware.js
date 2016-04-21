@@ -97,7 +97,7 @@ function init(store, plupload, options) {
 
 export default function middleware(plupload, origOptions = {}) {
   let uploader;
-  const options = { ...defaults, ...origOptions };
+  const options = Object.assign({}, defaults, origOptions);
   return store => next => action => {
     const { type, payload = {} } = action;
     if (type === ActionTypes.INIT) {

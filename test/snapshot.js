@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 
-import snapshot, { makeSnapshotFunction } from '../src/snapshot';
+import snapshot, { makeSnapshotFunction } from '../es6/snapshot';
 
 function defineSnapshotTests(c) {
   it('works on scalars', () => {
