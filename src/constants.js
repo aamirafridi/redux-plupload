@@ -62,5 +62,5 @@ export const ActionTypes = keymirror({
   DESTROYING: null,
 });
 
-Object.keys(ActionTypes).forEach(key => { ActionTypes[key] = `UPLOADER_${key}`; });
+Object.keys(ActionTypes).forEach(key => { ActionTypes[key] = `redux-plupload/${key}`; });
 
