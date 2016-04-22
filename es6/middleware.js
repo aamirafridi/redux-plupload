@@ -95,14 +95,13 @@ function init(store, plupload, options) {
   return uploader;
 }
 
-export default function middleware(plupload, origOptions = {}) {
+export default function createMiddleware(plupload, origOptions = {}) {
   let uploader;
-  const options = Object.assign({}, defaults, origOptions);
   return store => next => action => {
     const { type, payload = {} } = action;
     if (type === ActionTypes.INIT) {
       if (uploader) throw new Error('INIT called on existing uploader');
-      uploader = init(store, plupload, options);
+      uploader = init(store, plupload, Object.assign({}, defaults, origOptions, payload));
     }
     if (!uploader) return next(action);
 

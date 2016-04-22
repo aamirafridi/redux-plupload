@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import expect from 'expect.js';
 import sinonLib from 'sinon';
 
-import { middleware, ActionTypes } from '../es6/index';
+import { createMiddleware, ActionTypes } from '../es6/index';
 
 // const noop = () => {};
 // const noopStore = {
@@ -30,7 +30,7 @@ function Uploader() {
 
 const plupload = { Uploader };
 
-describe('middleware', () => {
+describe('createMiddleware', () => {
   let sinon;
   let uploader;
 
@@ -44,14 +44,14 @@ describe('middleware', () => {
   });
 
   it('returns a function', () => {
-    const mw = middleware();
+    const mw = createMiddleware();
     expect(mw).to.be.a('function');
   });
 
   it('creates an uploader on INIT', () => {
     const pluploadMock = sinon.mock(plupload);
     pluploadMock.expects('Uploader').once().returns(uploader);
-    const mw = middleware(plupload);
+    const mw = createMiddleware(plupload);
     mw({})(() => {})({ type: ActionTypes.INIT });
   });
 
@@ -60,14 +60,14 @@ describe('middleware', () => {
     const uploaderMock = sinon.mock(uploader);
     uploaderMock.expects('init').once();
     uploaderMock.expects('bind').atLeast(1);
-    const mw = middleware(plupload);
+    const mw = createMiddleware(plupload);
     mw({})(() => {})({ type: ActionTypes.INIT });
   });
 
   it('proxies actions to uploader methods', () => {
     sinon.stub(plupload, 'Uploader').returns(uploader);
     sinon.mock(uploader).expects('setOption').once().withExactArgs('option1', 'value1');
-    const dispatch = middleware(plupload)({})(() => {});
+    const dispatch = createMiddleware(plupload)({})(() => {});
     dispatch({ type: ActionTypes.INIT });
     dispatch({ type: ActionTypes.SET_OPTION, payload: { option: 'option1', value: 'value1' } });
   });
@@ -83,7 +83,7 @@ describe('middleware', () => {
       meta: { uploader: { domain: null } },
     };
     storeMock.expects('dispatch').once().withExactArgs(action);
-    const dispatch = middleware(plupload)(store)(() => {});
+    const dispatch = createMiddleware(plupload)(store)(() => {});
     dispatch({ type: ActionTypes.INIT });
     uploader.emit('UploadFile', uploader, file);
   });
