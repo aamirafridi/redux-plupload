@@ -22,6 +22,7 @@ class UploaderClass extends EventEmitter {
 
   init() {}
   setOption() {}
+  start() {}
 }
 
 function Uploader() {
@@ -66,10 +67,13 @@ describe('createMiddleware', () => {
 
   it('proxies actions to uploader methods', () => {
     sinon.stub(plupload, 'Uploader').returns(uploader);
-    sinon.mock(uploader).expects('setOption').once().withExactArgs('option1', 'value1');
+    const mock = sinon.mock(uploader);
+    mock.expects('setOption').once().withExactArgs('option1', 'value1');
+    mock.expects('start').once().withExactArgs();
     const dispatch = createMiddleware(plupload)({})(() => {});
     dispatch({ type: ActionTypes.INIT });
     dispatch({ type: ActionTypes.SET_OPTION, payload: { option: 'option1', value: 'value1' } });
+    dispatch({ type: ActionTypes.START });
   });
 
   it('proxies uploader events to actions', () => {

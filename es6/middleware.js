@@ -51,21 +51,25 @@ const defaults = {
   url: '/this/is/replaced/',
 };
 
-function setupUpload(origUploader, file, upload) {
-  const uploader = origUploader;
-  uploader.settings.multipart_params = upload.params || {};
-  if (!uploader.settings.multipart_params['Content-Type']) {
-    uploader.settings.multipart_params['Content-Type'] = file.type;
+function setupUpload(uploader, file, upload = {}) {
+  const { url, multipart_params } = uploader.settings;
+  const newUrl = upload.url || url;
+  const params = Object.assign({}, multipart_params, upload.params || {});
+  if (!params['Content-Type']) {
+    params['Content-Type'] = file.type;
   }
-  if (!uploader.settings.multipart_params['Content-Disposition']) {
-    uploader.settings.multipart_params['Content-Disposition'] = contentDisposition(file.name);
+  if (!params['Content-Disposition']) {
+    params['Content-Disposition'] = contentDisposition(file.name);
   }
   if (uploader.settings.runtime === 'html4') {
     // TODO(geophree): better redirect url?
     const { protocol, host } = global.location;
-    uploader.settings.multipart_params.redirect = `${protocol}//${host}/uploader/blank.html`;
+    params.redirect = `${protocol}//${host}/uploader/blank.html`;
   }
-  uploader.setOption({});
+  uploader.setOption({
+    url: newUrl,
+    multipart_params: params,
+  });
 }
 
 function init(store, plupload, options) {
@@ -73,9 +77,9 @@ function init(store, plupload, options) {
   const snapshot = makeSnapshotFunction();
 
   uploader.bind('BeforeUpload', (eventUploader, file) => {
-    if (!options.uploadDataSelector) return;
+    const { uploadSettingsSelector } = options;
+    const upload = uploadSettingsSelector ? uploadSettingsSelector(store.getState(), file) : {};
 
-    const upload = options.uploadDataSelector(store.getState(), file);
     setupUpload(eventUploader, file, upload);
   });
 
@@ -114,14 +118,14 @@ export default function createMiddleware(plupload, origOptions = {}) {
       case ActionTypes.CLEAR:
       case ActionTypes.DESTROY:
         [method] = actionToMethod[type];
-        uploader[method]();
+        uploader[method].apply(uploader);
         break;
       case ActionTypes.SET_OPTION:
       case ActionTypes.DISABLE_BROWSE:
       case ActionTypes.ADD_FILE:
       case ActionTypes.REMOVE_FILE:
         [method, payloadTransform] = actionToMethod[type] || [];
-        uploader[method](...(payloadTransform(payload) || []));
+        uploader[method].apply(uploader, (payloadTransform(payload) || []));
         break;
       default:
         break;
