@@ -5,6 +5,10 @@
   "license": "UNLICENSED",
   "main": "lib/index.js",
   "es6:main": "es6/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tes/redux-plupload.git"
+  },
   "scripts": {
     "test": "mocha && echo '***ES5***' && cross-env BABEL_ENV=es5 mocha",
     "lint": "eslint .",
