@@ -1,7 +1,7 @@
 # Redux-plupload
-Redux bindings for [Plupload](https://github.com/moxiecode/plupload).
+[FSA](https://github.com/acdlite/flux-standard-action)-compliant Redux bindings for [Plupload](https://github.com/moxiecode/plupload).
 ## Usage
-To use `redux-plupload`, you need to install the middleware (optionally the reducer), then send an `ActionTypes.INIT` message to init the uploader.  The `payload` of the action should include a `browse_button` (and optionaly `dropzone`) prop.  You can also specify the `url` and and `multipart_params` at that time, or provide an `uploadSettingsSelector` that will be called with `state` and `file` as args to find the extra per-file upload settings.
+To use `redux-plupload`, you must install the middleware (optionally the reducer), then send an `ActionTypes.INIT` message to init the `plupload.Uploader`.  The `payload` of the action should include a `browse_button` (and optionaly `dropzone`) prop.  You can also specify `url` and `multipart_params` props at `INIT` time, or provide an `uploadSettingsSelector` that will be called with `state` and `file` as args to find the extra per-file upload settings.
 ```js
 // client.js
 import ReactDOM from 'react-dom';
@@ -55,4 +55,4 @@ export default connect(
   (dispatch) => ({ initUploader: (payload) => dispatch(uploaderInit(payload)) })
 )(UploadButton);
 ```
-Once you've initted the uploader, it will call `plupload`'s methods in response to actions, and emit actions based on the events that `plupload` emits (with a few name-changes where they clash).  If you install the reducer, it will keep its state up to date with a copy of the uploader state.
+Once you've `INIT`ed `redux-plupload`, it will call the `plupload.Uploader`'s methods in response to actions, and emit actions based on the events that the `plupload.Uploader` emits (with a few name-changes where they clash).  If you install the reducer, it will keep its state up to date with a copy of the `plupload.Uploader` state.
