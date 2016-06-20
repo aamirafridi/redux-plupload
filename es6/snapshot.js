@@ -12,7 +12,7 @@ function snapshotObject(obj, origRef, context) {
   let foundRefKeys = 0;
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
-    if (key.startsWith('_') || key.startsWith('Symbol(')) continue;
+    if (key.lastIndexOf('_', 0) === 0 || key.lastIndexOf('Symbol(', 0) === 0) continue;
     if (ref.hasOwnProperty(key)) foundRefKeys++;
 
     const referenceStateForKey = ref[key];
