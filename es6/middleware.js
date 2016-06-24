@@ -62,9 +62,7 @@ function setupUpload(uploader, file, upload = {}) {
     params['Content-Disposition'] = contentDisposition(file.name);
   }
   if (uploader.runtime === 'html4') {
-    // TODO(geophree): better redirect url?
-    const { protocol, host } = global.location;
-    params.redirect = `${protocol}//${host}/uploader/blank.html`;
+    params.redirect = global.location.href;
   }
   uploader.setOption({
     url: newUrl,
