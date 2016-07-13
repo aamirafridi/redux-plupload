@@ -56,6 +56,14 @@ describe('createMiddleware', () => {
     mw({})(() => {})({ type: ActionTypes.INIT });
   });
 
+  it('allows multiple uploaders to be created when an uploaderId is provided on INIT', () => {
+    const pluploadMock = sinon.mock(plupload);
+    pluploadMock.expects('Uploader').twice().returns(uploader);
+    const mw = createMiddleware(plupload);
+    mw({})(() => {})({ type: ActionTypes.INIT, uploaderId: 'uploaderOne' });
+    mw({})(() => {})({ type: ActionTypes.INIT, uploaderId: 'uploaderTwo' });
+  });
+
   it('inits and binds to events on INIT', () => {
     sinon.stub(plupload, 'Uploader').returns(uploader);
     const uploaderMock = sinon.mock(uploader);
@@ -84,7 +92,7 @@ describe('createMiddleware', () => {
     const action = {
       type: ActionTypes.UPLOAD_FILE,
       payload: file,
-      meta: { uploader: { domain: null } },
+      meta: { uploader: { domain: null }, uploaderId: 'default' },
     };
     storeMock.expects('dispatch').once().withExactArgs(action);
     const dispatch = createMiddleware(plupload)(store)(() => {});

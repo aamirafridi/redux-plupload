@@ -70,7 +70,7 @@ function setupUpload(uploader, file, upload = {}) {
   });
 }
 
-function init(store, plupload, options) {
+function init(store, plupload, options, uploaderId) {
   const uploader = new plupload.Uploader(options);
   const snapshot = makeSnapshotFunction();
 
@@ -88,6 +88,7 @@ function init(store, plupload, options) {
       const action = argsToAction(...args);
       if (!action.meta) action.meta = {};
       action.meta.uploader = uploaderState;
+      action.meta.uploaderId = uploaderId;
       action.type = type;
       store.dispatch(action);
     });
@@ -98,12 +99,15 @@ function init(store, plupload, options) {
 }
 
 export default function createMiddleware(plupload, origOptions = {}) {
-  let uploader;
+  let uploaders;
   return store => next => action => {
-    const { type, payload = {} } = action;
+    const { type, payload = {}, uploaderId = 'default' } = action;
+    uploaders = uploaders || {};
+    const uploader = uploaders[uploaderId];
     if (type === ActionTypes.INIT) {
       if (uploader) throw new Error('INIT called on existing uploader');
-      uploader = init(store, plupload, Object.assign({}, defaults, origOptions, payload));
+      const options = Object.assign({}, defaults, origOptions, payload);
+      uploaders[uploaderId] = init(store, plupload, options, uploaderId);
     }
     if (!uploader) return next(action);
 
