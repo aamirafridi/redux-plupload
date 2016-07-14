@@ -7,9 +7,15 @@ describe('reducer', () => {
     expect(reducer(undefined, { type: 'INIT' })).to.eql({});
   });
   it('updates state on uploader actions', () => {
-    const uploader = {};
+    const uploader = { handle: 'default' };
     const newState = reducer(undefined, { type: ActionTypes.INITING, meta: { uploader } });
     expect(newState).to.be(uploader);
+  });
+  it('returns old state on actions from uploaders other than the default', () => {
+    const uploader = { handle: 'not-default' };
+    const oldState = {};
+    const newState = reducer(oldState, { type: ActionTypes.INITING, meta: { uploader } });
+    expect(newState).to.be(oldState);
   });
   it('returns old state on non-uploader actions', () => {
     const uploader = {};

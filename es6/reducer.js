@@ -1,4 +1,4 @@
-import { ActionTypes } from './constants';
+import { ActionTypes, DEFAULT_UPLOADER_HANDLE } from './constants';
 
 export default function reducer(state = {}, { type, meta: { uploader } = {} }) {
   switch (type) {
@@ -19,7 +19,7 @@ export default function reducer(state = {}, { type, meta: { uploader } = {} }) {
     case ActionTypes.UPLOAD_COMPLETE:
     case ActionTypes.ERROR:
     case ActionTypes.DESTROYING:
-      return uploader;
+      return uploader.handle === DEFAULT_UPLOADER_HANDLE ? uploader : state;
     default:
       return state;
   }

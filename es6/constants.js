@@ -64,3 +64,4 @@ export const ActionTypes = keymirror({
 
 Object.keys(ActionTypes).forEach(key => { ActionTypes[key] = `redux-plupload/${key}`; });
 
+export const DEFAULT_UPLOADER_HANDLE = 'default';

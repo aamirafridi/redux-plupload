@@ -1,6 +1,6 @@
 import contentDisposition from 'content-disposition';
 
-import { ActionTypes } from './constants';
+import { ActionTypes, DEFAULT_UPLOADER_HANDLE } from './constants';
 import { makeSnapshotFunction } from './snapshot';
 
 const actionToMethod = {
@@ -103,7 +103,7 @@ export default function createMiddleware(plupload, origOptions = {}) {
   return store => next => action => {
     const { type, payload = {}, meta = {} } = action;
     uploaders = uploaders || {};
-    const uploaderHandle = meta.uploaderHandle || 'default';
+    const uploaderHandle = meta.uploaderHandle || DEFAULT_UPLOADER_HANDLE;
     const uploader = uploaders[uploaderHandle];
     if (type === ActionTypes.INIT) {
       if (uploader) throw new Error('INIT called on existing uploader');
