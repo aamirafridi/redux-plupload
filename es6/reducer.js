@@ -1,7 +1,7 @@
 import { ActionTypes, DEFAULT_UPLOADER_HANDLE } from './constants';
 
-export function createReducer(uploaderHandle = DEFAULT_UPLOADER_HANDLE) {
-  return function reducer(state = {}, { type, meta: { uploader } = {} }) {
+export function createReducer(handle = DEFAULT_UPLOADER_HANDLE) {
+  return function reducer(state = { handle }, { type, meta: { uploader } = {} }) {
     switch (type) {
       case ActionTypes.INITING:
       case ActionTypes.POST_INIT:
@@ -20,7 +20,7 @@ export function createReducer(uploaderHandle = DEFAULT_UPLOADER_HANDLE) {
       case ActionTypes.UPLOAD_COMPLETE:
       case ActionTypes.ERROR:
       case ActionTypes.DESTROYING:
-        return uploader.handle === uploaderHandle ? uploader : state;
+        return uploader.handle === handle ? uploader : state;
       default:
         return state;
     }

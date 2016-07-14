@@ -3,8 +3,8 @@ import expect from 'expect.js';
 import { ActionTypes, reducer, createReducer } from '../es6/index';
 
 describe('reducer', () => {
-  it('returns empty state when passed undefined and non-uploader action', () => {
-    expect(reducer(undefined, { type: 'INIT' })).to.eql({});
+  it('returns state with only the handle when passed undefined and non-uploader action', () => {
+    expect(reducer(undefined, { type: 'INIT' })).to.eql({ handle: 'default' });
   });
   it('updates state on uploader actions', () => {
     const uploader = { handle: 'default' };
