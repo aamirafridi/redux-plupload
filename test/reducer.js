@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 
-import { ActionTypes, reducer } from '../es6/index';
+import { ActionTypes, reducer, createReducer } from '../es6/index';
 
 describe('reducer', () => {
   it('returns empty state when passed undefined and non-uploader action', () => {
@@ -22,6 +22,22 @@ describe('reducer', () => {
     const oldState = {};
     const newState = reducer(oldState, { type: 'FOO', meta: { uploader } });
     expect(newState).to.not.be(uploader);
+    expect(newState).to.be(oldState);
+  });
+});
+
+describe('createReducer', () => {
+  it('creates a reducer which updates state on its uploader actions', () => {
+    const myReducer = createReducer('my-uploader');
+    const uploader = { handle: 'my-uploader' };
+    const newState = myReducer(undefined, { type: ActionTypes.INITING, meta: { uploader } });
+    expect(newState).to.be(uploader);
+  });
+  it('creates a reducer which returns old state on actions from other uploaders', () => {
+    const myReducer = createReducer('my-uploader');
+    const uploader = { handle: 'not-my-uploader' };
+    const oldState = {};
+    const newState = myReducer(oldState, { type: ActionTypes.INITING, meta: { uploader } });
     expect(newState).to.be(oldState);
   });
 });
