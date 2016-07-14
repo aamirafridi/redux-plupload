@@ -60,8 +60,8 @@ describe('createMiddleware', () => {
     const pluploadMock = sinon.mock(plupload);
     pluploadMock.expects('Uploader').twice().returns(uploader);
     const mw = createMiddleware(plupload);
-    mw({})(() => {})({ type: ActionTypes.INIT, meta: { uploaderHandle: 'uploaderOne' } });
-    mw({})(() => {})({ type: ActionTypes.INIT, meta: { uploaderHandle: 'uploaderTwo' } });
+    mw({})(() => {})({ type: ActionTypes.INIT, payload: { uploaderHandle: 'uploaderOne' } });
+    mw({})(() => {})({ type: ActionTypes.INIT, payload: { uploaderHandle: 'uploaderTwo' } });
   });
 
   it('inits and binds to events on INIT', () => {
