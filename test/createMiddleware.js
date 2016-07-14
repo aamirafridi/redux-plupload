@@ -60,8 +60,8 @@ describe('createMiddleware', () => {
     const pluploadMock = sinon.mock(plupload);
     pluploadMock.expects('Uploader').twice().returns(uploader);
     const mw = createMiddleware(plupload);
-    mw({})(() => {})({ type: ActionTypes.INIT, uploaderId: 'uploaderOne' });
-    mw({})(() => {})({ type: ActionTypes.INIT, uploaderId: 'uploaderTwo' });
+    mw({})(() => {})({ type: ActionTypes.INIT, meta: { uploaderHandle: 'uploaderOne' } });
+    mw({})(() => {})({ type: ActionTypes.INIT, meta: { uploaderHandle: 'uploaderTwo' } });
   });
 
   it('inits and binds to events on INIT', () => {
@@ -92,7 +92,7 @@ describe('createMiddleware', () => {
     const action = {
       type: ActionTypes.UPLOAD_FILE,
       payload: file,
-      meta: { uploader: { domain: null }, uploaderId: 'default' },
+      meta: { uploader: { domain: null, handle: 'default' } },
     };
     storeMock.expects('dispatch').once().withExactArgs(action);
     const dispatch = createMiddleware(plupload)(store)(() => {});
