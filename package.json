@@ -2,7 +2,7 @@
   "name": "redux-plupload",
   "version": "0.1.0",
   "description": "Redux integration for Plupload",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "lib/index.js",
   "es6:main": "es6/index.js",
   "repository": {
