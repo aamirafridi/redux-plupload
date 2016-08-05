@@ -6,7 +6,7 @@
 
 `redux-plupload` helps you use Redux actions for bi-directional communication with a `plupload` uploader instance.
 
-You can dispatch an action to instruct `plupload`. For example, to start an upload:
+You can dispatch an action to call a `plupload` method. For example, to start an upload:
 
 ```js
 // action.js
@@ -124,7 +124,7 @@ dispatch ({ type: ActionTypes.ADD_FILE, payload: { file, fileName } });
 
 __[removeFile](http://www.plupload.com/docs/Uploader#removeFile-file-method)__
 ```js
-dispatch ({ type: ActionTypes.ADD_FILE, payload: { file } });
+dispatch ({ type: ActionTypes.REMOVE_FILE, payload: { file } });
 ```
 
 __[destroy](http://www.plupload.com/docs/Uploader#destroy--method)__
@@ -274,8 +274,8 @@ __Initialising an uploader with a handle__:
 
 ```js
 const options = {
-  // Other options
   handle: 'myUploader',
+  // other options
 };
 dispatch ({ type: ActionTypes.INIT, payload: options });
 ```
