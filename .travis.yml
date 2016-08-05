@@ -2,3 +2,5 @@ language: node_js
 before_script:
   - npm run clean
   - npm run lint
+after_success:
+  - npm run build
