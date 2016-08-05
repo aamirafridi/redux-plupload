@@ -2,6 +2,8 @@
 
 [FSA](https://github.com/acdlite/flux-standard-action)-compliant [Redux](https://github.com/reactjs/redux) bindings for [Plupload](https://github.com/moxiecode/plupload).
 
+[![GitHub license](https://img.shields.io/github/license/tes/redux-plupload.svg)](https://github.com/tes/redux-plupload/blob/master/LICENSE)
+
 ## Overview
 
 `redux-plupload` helps you use Redux actions for bi-directional communication with a `plupload` uploader instance.
