@@ -99,6 +99,12 @@ function init(store, plupload, options) {
   return uploader;
 }
 
+function runUploaderMethod(uploader, type, payload) {
+  const [method, payloadTransform] = actionToMethod[type] || [];
+  const args = (payloadTransform) ? payloadTransform(payload) : [];
+  return uploader[method].apply(uploader, args || []);
+}
+
 export default function createMiddleware(plupload, origOptions = {}) {
   let uploaders;
   return store => next => action => {
@@ -113,23 +119,20 @@ export default function createMiddleware(plupload, origOptions = {}) {
     }
     if (!uploader) return next(action);
 
-    let method = undefined;
-    let payloadTransform = undefined;
     switch (type) {
       case ActionTypes.REFRESH:
       case ActionTypes.START:
       case ActionTypes.STOP:
       case ActionTypes.CLEAR:
-      case ActionTypes.DESTROY:
-        [method] = actionToMethod[type];
-        uploader[method].apply(uploader);
-        break;
       case ActionTypes.SET_OPTION:
       case ActionTypes.DISABLE_BROWSE:
       case ActionTypes.ADD_FILE:
       case ActionTypes.REMOVE_FILE:
-        [method, payloadTransform] = actionToMethod[type] || [];
-        uploader[method].apply(uploader, (payloadTransform(payload) || []));
+        runUploaderMethod(uploader, type, payload);
+        break;
+      case ActionTypes.DESTROY:
+        runUploaderMethod(uploader, type, payload);
+        delete uploaders[handle];
         break;
       default:
         break;

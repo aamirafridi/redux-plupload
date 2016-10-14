@@ -23,6 +23,7 @@ class UploaderClass extends EventEmitter {
   init() {}
   setOption() {}
   start() {}
+  destroy() {}
 }
 
 function Uploader() {
@@ -98,5 +99,17 @@ describe('createMiddleware', () => {
     const dispatch = createMiddleware(plupload)(store)(() => {});
     dispatch({ type: ActionTypes.INIT });
     uploader.emit('UploadFile', uploader, file);
+  });
+
+  it('stops proxying after destory, allows re-init', () => {
+    sinon.stub(plupload, 'Uploader').returns(uploader);
+    sinon.mock(uploader).expects('start').once();
+    const store = { dispatch() {} };
+    const dispatch = createMiddleware(plupload)(store)(() => {});
+    dispatch({ type: ActionTypes.INIT });
+    dispatch({ type: ActionTypes.START });
+    dispatch({ type: ActionTypes.DESTROY });
+    dispatch({ type: ActionTypes.START });
+    dispatch({ type: ActionTypes.INIT });
   });
 });
