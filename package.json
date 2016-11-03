@@ -25,6 +25,9 @@
     "lib",
     "es6"
   ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "dependencies": {
     "content-disposition": "^0.5.1",
     "keymirror": "^0.1.1"
